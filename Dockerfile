@@ -7,8 +7,11 @@ ENV ANDROID_COMPILE_SDK "28"
 ENV ANDROID_BUILD_TOOLS "28.0.2"
 ENV ANDROID_SDK_TOOLS "26.1.1"
 
-ENV ANDROID_HOME "android-sdk-linux"
-ENV PATH "$PATH:$ANDROID_HOME/tools"
+ENV ANDROID_HOME /usr/local/android-sdk
+ENV ANDROID_SDK_HOME /usr/local/android-sdk
+
+ENV PATH $PATH:$ANDROID_SDK_HOME/tools
+ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
 
 RUN apt-get -qq update && \
     apt-get install -qqy --no-install-recommends \
@@ -22,7 +25,7 @@ RUN apt-get -qq update && \
 RUN rm -f /etc/ssl/certs/java/cacerts; \
     /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
-RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-${VERSION_SDK_TOOLS}.zip > /sdk.zip && \
+RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-$VERSION_SDK_TOOLS.zip > /sdk.zip && \
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
@@ -37,3 +40,6 @@ RUN $ANDROID_HOME/tools/bin/sdkmanager --update && \
     $ANDROID_HOME/tools/bin/sdkmanager "platforms;android-$ANDROID_COMPILE_SDK" "build-tools;$ANDROID_BUILD_TOOLS" "extras;google;m2repository" "extras;android;m2repository" > installPlatform.log
 
 RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+
+RUN chown -R $ANDROID_HOME $ANDROID_SDK_HOME
+RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME
