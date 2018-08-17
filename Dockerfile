@@ -41,4 +41,4 @@ RUN $ANDROID_HOME/tools/bin/sdkmanager --update && \
 
 RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
-RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME
+RUN chmod -R a+rx $ANDROID_SDK_HOME
