@@ -29,8 +29,8 @@ RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-$VERSION_SD
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
-RUN mkdir -p /root/.android/ && \
-    touch /root/.android/repositories.cfg
+RUN mkdir -p $ANDROID_SDK_HOME/.android/ && \
+    touch $ANDROID_SDK_HOME/.android/repositories.cfg
 
 RUN mkdir -p $ANDROID_HOME/licenses/ && \
    echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license && \
@@ -41,5 +41,4 @@ RUN $ANDROID_HOME/tools/bin/sdkmanager --update && \
 
 RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
 
-RUN chown -R $ANDROID_HOME $ANDROID_SDK_HOME
 RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME
