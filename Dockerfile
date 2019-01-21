@@ -28,17 +28,20 @@ RUN curl -s https://dl.google.com/android/repository/sdk-tools-linux-$VERSION_SD
     unzip /sdk.zip -d $ANDROID_HOME && \
     rm -v /sdk.zip
 
-RUN mkdir -p $ANDROID_SDK_HOME/.android/ && \
-    touch $ANDROID_SDK_HOME/.android/repositories.cfg
-
 RUN mkdir -p $ANDROID_HOME/licenses/ && \
    echo "8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > $ANDROID_HOME/licenses/android-sdk-license && \
    echo "84831b9409646a918e30573bab4c9c91346d8abd\n504667f4c0de7af1a06de9f4b1727b84351f2910" > $ANDROID_HOME/licenses/android-sdk-preview-license
 
-RUN $ANDROID_HOME/tools/bin/sdkmanager --update 
+ADD packages.txt /sdk
 
-RUN $ANDROID_HOME/tools/bin/sdkmanager "build-tools;$ANDROID_BUILD_TOOLS" "extras;google;m2repository" "extras;android;m2repository" "platforms;android-$ANDROID_COMPILE_SDK"> installPlatform.log
+RUN mkdir -p $ANDROID_SDK_HOME/.android/ && \
+    touch $ANDROID_SDK_HOME/.android/repositories.cfg
 
-RUN yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses
+RUN ${ANDROID_HOME}/tools/bin/sdkmanager --update 
+
+RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/packages.txt && \
+    ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
+
+RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
 
 RUN chmod -R a+rx $ANDROID_SDK_HOME
