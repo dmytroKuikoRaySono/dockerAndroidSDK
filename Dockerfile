@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk
+FROM ubuntu:18.04
 
 MAINTAINER dmytryK
 
